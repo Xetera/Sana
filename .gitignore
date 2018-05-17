@@ -1,0 +1,4 @@
+*.class
+*.log
+.idea/
+src/main/scala/net.xetera/settings/BotSettings.scala

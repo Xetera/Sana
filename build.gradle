@@ -1,0 +1,24 @@
+plugins {
+    id'java'
+    id'application'
+    id'com.github.johnrengelman.shadow' version '2.0.1'
+}
+
+mainClassName = 'net.xetera.Bot'
+
+version '1.0'
+def jdaVersion = '3.3.1_308'
+
+sourceCompatibility = 1.8
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile "net.dv8tion:JDA:3.6.0_366"
+    compile "org.scala-lang:scala-xml:2.11.0-M4"
+    compile "org.scala-lang:scala-library:2.11"
+}
+
+compileJava.options.encoding = 'UTF-8'
