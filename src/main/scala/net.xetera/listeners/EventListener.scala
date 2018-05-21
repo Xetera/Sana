@@ -1,7 +1,7 @@
 package listeners
 
 import commands.CommandHandler
-import net.dv8tion.jda.core.events.ReadyEvent
+import net.dv8tion.jda.core.events.{ExceptionEvent, ReadyEvent}
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent
 import net.dv8tion.jda.core.hooks.ListenerAdapter
 
@@ -12,18 +12,20 @@ object EventListener extends ListenerAdapter {
 
 		println(event.getJDA.asBot().getInviteUrl())
 		CommandHandler.registerCommands()
-		println(CommandHandler.commands.length)
-		CommandHandler.commands.foreach(println)
 	}
 
 	override def onMessageReceived(event: MessageReceivedEvent): Unit = {
 		val message = event.getMessage
+
 		if (message.getAuthor.isBot)
 			return
+
 		println(s"${message.getAuthor.getName}: ${message.getContentDisplay}")
 		val content = event.getMessage.getContentDisplay
-		if (!Utils.isCommand(content))
+		if (!Utils.isCommand(content)) {
+			CodeListener.checkMessage(message)
 			return
+		}
 
 		val args: Option[(String, Array[String])] = Utils.getArgs(content)
 
@@ -34,5 +36,10 @@ object EventListener extends ListenerAdapter {
 
 		CommandHandler.executeCommand(args.get._1, message, args.get._2)
 
+	}
+
+	override def onException(event: ExceptionEvent): Unit = {
+		println("GOT AN EXCEPTION")
+		println(event.toString)
 	}
 }
