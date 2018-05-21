@@ -19,11 +19,8 @@ class Command(
 	var run: (CommandParameters) => Unit
 	) {
 
-	println("Constructor called")
 	CommandHandler.registerCommand(this)
-
 	override def toString: String = this.name
-
 }
 
 object CommandHandler {
@@ -57,6 +54,6 @@ object CommandHandler {
 	}
 
 	def registerCommands(): Unit ={
-		Commands.commands
+		Commands.commands.apply(0)
 	}
 }
