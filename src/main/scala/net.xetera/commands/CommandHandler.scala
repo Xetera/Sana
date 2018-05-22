@@ -1,6 +1,7 @@
 package commands
 
 import net.dv8tion.jda.core.entities.{Icon, Message}
+import utils.Utils
 
 import scala.collection.mutable.ArrayBuffer
 
@@ -12,7 +13,7 @@ trait CommandParameters {
 }
 
 class Command(
-	var name: String,
+	var name: Either[String, Array[String]],
 	var description: String,
 	var usage: String,
 	var example: String,
@@ -20,7 +21,12 @@ class Command(
 	) {
 
 	CommandHandler.registerCommand(this)
-	override def toString: String = this.name
+	override def toString: String =
+		if (this.name.isLeft)
+			this.name.left.get
+		else
+			this.name.right.get(0)
+
 }
 
 object CommandHandler {
@@ -35,8 +41,15 @@ object CommandHandler {
 			println("No commands were found")
 			return
 		}
+
 		val matches: Option[Command] = this.commands.find(
-			command => command.name.toLowerCase().equals(targetName.toLowerCase())
+			command => if (command.name.isLeft){
+				Utils.compareCaseInsensitive(command.name.left.get, targetName)
+			} else {
+				Utils.compareCaseInsensitive(command.name.right.get.find(
+					subCommands => Utils.compareCaseInsensitive(subCommands, targetName)
+				).getOrElse(""), targetName)
+			}
 		)
 		val values = (message, args)
 		val parameter = new CommandParameters {
