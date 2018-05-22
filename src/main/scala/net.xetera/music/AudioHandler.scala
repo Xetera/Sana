@@ -7,7 +7,6 @@ import music.TrackScheduler
 import net.dv8tion.jda.core.entities.TextChannel
 
 class AudioHandler(player: AudioPlayer, trackScheduler: TrackScheduler, bound: TextChannel) extends AudioLoadResultHandler {
-
 	override def loadFailed(exception: FriendlyException): Unit = {
 		println("load failed")
 	}
@@ -22,7 +21,7 @@ class AudioHandler(player: AudioPlayer, trackScheduler: TrackScheduler, bound: T
 
 	override def trackLoaded(track: AudioTrack): Unit = {
 		//trackScheduler.queue(track)
-		bound.sendMessage(s"Now playing ${track.getInfo.title}").queue()
+		bound.sendMessage(s"Now playing **${track.getInfo.title}**").queue()
 		player.setVolume(7)
 		trackScheduler.queue(track)
 		player.playTrack(track)

@@ -4,7 +4,6 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayer
 import com.sedmelluq.discord.lavaplayer.player.event.{AudioEventAdapter, AudioEventListener}
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException
 import com.sedmelluq.discord.lavaplayer.track.{AudioTrack, AudioTrackEndReason}
-import java.util.concurrent.LinkedBlockingQueue
 
 class TrackScheduler(player: AudioPlayer) extends AudioEventAdapter with AudioEventListener{
 
@@ -25,11 +24,11 @@ class TrackScheduler(player: AudioPlayer) extends AudioEventAdapter with AudioEv
 	}
 
 	override def onPlayerPause(player: AudioPlayer): Unit = {
-		// Player was paused
+		println("Paused player")
 	}
 
 	override def onPlayerResume(player: AudioPlayer): Unit = {
-		// Player was resumed
+		println("Resumed player")
 	}
 
 	override def onTrackStart(player: AudioPlayer, track: AudioTrack): Unit = {

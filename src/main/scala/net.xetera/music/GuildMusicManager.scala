@@ -6,7 +6,9 @@ import net.dv8tion.jda.core.entities.{Guild, TextChannel, VoiceChannel}
 import net.dv8tion.jda.core.managers.AudioManager
 
 class GuildMusicManager(guild: Guild, channel: VoiceChannel, bound: TextChannel) {
-
+	/**
+	  * Configures the player
+	  */
 	val playerManager: AudioPlayerManager = new DefaultAudioPlayerManager()
 	/**
 	  * Registering the player manager as an audio source
@@ -16,18 +18,23 @@ class GuildMusicManager(guild: Guild, channel: VoiceChannel, bound: TextChannel)
 	  * New single-guild player
 	  */
 	val player: AudioPlayer = playerManager.createPlayer
-
+	/**
+	  * JDA connection of the music player
+	  */
 	val manager: AudioManager = guild.getAudioManager
 	/**
 	  * Registering the audio handler on discord
 	  */
 	manager.setSendingHandler(new AudioPlayerSendHandler(player))
-
 	manager.openAudioConnection(channel)
+	/**
+	  * Queue and event listener for music updates
+	  */
 	val trackScheduler: TrackScheduler = new TrackScheduler(player)
-
 	player.addListener(trackScheduler)
+
 	val audioHandler = new AudioHandler(player, trackScheduler, bound)
+
 	bound.sendMessage(s"Joining ${channel.getName}, sending updates to ${bound.getName}.").queue()
 
 	def setVolume(from: TextChannel, amount: Int): Unit = {
@@ -46,6 +53,10 @@ class GuildMusicManager(guild: Guild, channel: VoiceChannel, bound: TextChannel)
 		}
 	}
 
+	def changeChannels(from: TextChannel, to: VoiceChannel): Unit = {
+
+	}
+
 	def getStatus(from: TextChannel): Unit = {
 		val isPlaying = player.getPlayingTrack
 
@@ -59,5 +70,23 @@ class GuildMusicManager(guild: Guild, channel: VoiceChannel, bound: TextChannel)
 
 	def play(from: TextChannel, args: String): Unit = {
 		playerManager.loadItem(args, audioHandler)
+	}
+
+	def resume(from: TextChannel): Unit = {
+		if (!player.isPaused){
+			from.sendMessage("Player isn't paused.").queue()
+			return
+		}
+		player.setPaused(false)
+		from.sendMessage("Player is now playing.").queue()
+	}
+
+	def pause(from: TextChannel): Unit = {
+		if (player.isPaused){
+			from.sendMessage("Player is already paused.").queue()
+			return
+		}
+		player.setPaused(true)
+		from.sendMessage("Player is now paused.").queue()
 	}
 }
