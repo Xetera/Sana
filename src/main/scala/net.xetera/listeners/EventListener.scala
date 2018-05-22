@@ -1,9 +1,12 @@
 package listeners
 
 import commands.CommandHandler
+import net.dv8tion.jda.core.events.channel.voice.update.GenericVoiceChannelUpdateEvent
+import net.dv8tion.jda.core.events.guild.voice.GenericGuildVoiceEvent
 import net.dv8tion.jda.core.events.{ExceptionEvent, ReadyEvent}
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent
 import net.dv8tion.jda.core.hooks.ListenerAdapter
+import utils.Utils
 
 
 object EventListener extends ListenerAdapter {
@@ -41,5 +44,14 @@ object EventListener extends ListenerAdapter {
 	override def onException(event: ExceptionEvent): Unit = {
 		println("GOT AN EXCEPTION")
 		println(event.toString)
+	}
+
+	override def onGenericGuildVoice(event: GenericGuildVoiceEvent): Unit = {
+		println("VOICE CHANNEL UPDATE")
+		if (!event.getMember.getVoiceState.inVoiceChannel){
+			return
+		}
+
+		event.getVoiceState.getChannel.getMembers.toArray().foreach(println)
 	}
 }
