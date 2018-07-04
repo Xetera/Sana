@@ -1,4 +1,1 @@
-*.class
-*.log
-.idea/
-src/main/scala/net.xetera/settings/BotSettings.scala
+src/config/secret.py
